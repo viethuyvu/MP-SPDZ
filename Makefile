@@ -264,6 +264,10 @@ malicious-rep-ring-party.x: Protocols/MalRepRingOptions.o
 sy-rep-ring-party.x: Protocols/MalRepRingOptions.o
 rep4-ring-party.x: GC/Rep4Secret.o GC/Rep4Prep.o
 no-party.x: Protocols/ShareInterface.o
+PPMLAC-party.x: PPMLAC_party.o Protocols/ShareInterface.o $(MINI_OT) $(SHAREDLIB)
+	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS)
+PPMLAC_party.o: Machines/PPMLAC_party.cpp Protocols/PPMLAC_share.h Protocols/PPMLAC_protocol.h Protocols/PPMLAC_prep.h
+	$(CXX) $(CFLAGS) -c -o $@ $<
 semi-ecdsa-party.x: $(OT) $(LIBSIMPLEOT) $(GC_SEMI)
 mascot-ecdsa-party.x: $(OT) $(LIBSIMPLEOT)
 rep4-ecdsa-party.x: GC/Rep4Prep.o
