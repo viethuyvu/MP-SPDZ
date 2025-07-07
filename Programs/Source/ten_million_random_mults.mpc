@@ -1,0 +1,17 @@
+# Programs/Source/ten_million_random_mults.mpc
+from Compiler.types import sint
+
+N = 100000  # Number of multiplications
+c = sint(0)
+
+start_timer(0)
+
+for i in range(N):
+    a = sint.get_random()
+    b = sint.get_random()
+    c += a * b  # Just to keep compiler from optimizing the loop away
+
+stop_timer(0)
+
+# Optional: reveal something
+c.reveal().print_reg()
