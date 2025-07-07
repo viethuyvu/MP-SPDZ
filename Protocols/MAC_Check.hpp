@@ -164,6 +164,7 @@ void MAC_Check_<U>::Check(const Player& P)
 
   //cerr << "In MAC Check : " << popen_cnt << endl;
 
+  CODE_LOCATION
   auto& vals = this->vals;
   auto& macs = this->macs;
   auto& popen_cnt = this->popen_cnt;
@@ -302,6 +303,7 @@ void MAC_Check_Z2k<T, U, V, W>::Check(const Player& P)
   if (this->WaitingForCheck() == 0)
     return;
 
+  CODE_LOCATION
 #ifdef DEBUG_MAC
   cout << "Checking " << shares[0] << " " << this->vals[0] << " " << this->macs[0] << endl;
 #endif
@@ -314,7 +316,6 @@ void MAC_Check_Z2k<T, U, V, W>::Check(const Player& P)
   T y, mj;
   y.assign_zero();
   mj.assign_zero();
-  vector<U> chi;
   for (int i = 0; i < this->popen_cnt; ++i)
   {
     U temp_chi;
@@ -323,7 +324,6 @@ void MAC_Check_Z2k<T, U, V, W>::Check(const Player& P)
     y += xi * temp_chi;
     T mji = this->macs[i];
     mj += temp_chi * mji;
-    chi.push_back(temp_chi);
   }
 
   T zj = mj - this->alphai * y;
@@ -395,6 +395,7 @@ void Direct_MAC_Check<T>::pre_exchange(const Player& P)
 template<class T>
 void Direct_MAC_Check<T>::exchange(const Player& P)
 {
+  CODE_LOCATION
   pre_exchange(P);
   P.unchecked_broadcast(oss);
 

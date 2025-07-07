@@ -193,6 +193,7 @@ template<int L>
 template<class FD>
 void LowGearKeyGen<L>::run(PairwiseSetup<FD>& setup)
 {
+    CODE_LOCATION
     generate_keys(setup.params);
     machine.sk.check(machine.pk, setup.FieldD);
 

@@ -54,10 +54,12 @@ def maskField(a, k):
 def EQZ(a, k):
     prog = program.Program.prog
     if prog.use_split():
+        prog.reading('equality', 'ABY3')
         from Compiler.GC.types import sbitvec
         v = sbitvec(a, k).v
         bit = util.tree_reduce(operator.and_, (~b for b in v))
         return types.sintbit.conv(bit)
+    prog.reading('equality', 'ABZS13')
     return prog.non_linear.eqz(a, k)
 
 def bits(a,m):
@@ -72,7 +74,7 @@ def bits(a,m):
         from Compiler.types import regint, cint
         while m > 0:
             aa = regint()
-            convmodp(aa, a, bitlength=0)
+            convmodp(aa, a, 0, bitlength=0)
             res += [cint(x) for x in aa.bit_decompose(min(64, m))]
             m -= 64
             if m > 0:
@@ -86,10 +88,10 @@ def carry(b, a, compute_p=True):
         (p,g) = (p_2, g_2)o(p_1, g_1) -> (p_1 & p_2, g_2 | (p_2 & g_1))
     """
     if compute_p:
-        t1 = a[0].bit_and(b[0])
+        t1 = util.bit_and(a[0], b[0])
     else:
         t1 = None
-    t2 = a[1] + a[0].bit_and(b[1])
+    t2 = a[1] + util.bit_and(a[0], b[1])
     return (t1, t2)
 
 def or_op(a, b, void=None):
@@ -300,11 +302,14 @@ def BitDec(a, k, m, bits_to_compute=None):
     return program.Program.prog.non_linear.bit_dec(a, k, m)
 
 def BitDecRingRaw(a, k, m):
+    prog = program.Program.prog
     comparison.require_ring_size(m, 'bit decomposition')
     n_shift = int(program.Program.prog.options.ring) - m
     if program.Program.prog.use_split():
+        prog.reading('bit decomposition', 'ABY3')
         x = a.split_to_two_summands(m)
         bits = types._bitint.bit_adder(x[0], x[1])
+        assert len(bits) >= m
         return bits[:m]
     else:
         if program.Program.prog.use_edabit():
@@ -317,7 +322,9 @@ def BitDecRingRaw(a, k, m):
             r = types.sint.bit_compose(r_bits)
         shifted = ((a - r) << n_shift).reveal(False)
         masked = shifted >> n_shift
-        bits = r_bits[0].bit_adder(r_bits, masked.bit_decompose(m))
+        bits = r_bits[0].bit_adder(r_bits, masked.bit_decompose(m),
+                                   get_carry=False)
+        assert len(bits) == m
         return bits
 
 @instructions_base.bit_cisc
@@ -327,6 +334,7 @@ def BitDecRing(a, k, m):
     return [types.sintbit.conv(bit) for bit in reversed(bits)][::-1]
 
 def BitDecFieldRaw(a, k, m, bits_to_compute=None):
+    comparison.program.reading('bit decomposition', 'ABZS13')
     instructions_base.set_global_vector_size(a.size)
     r_dprime = types.sint()
     r_prime = types.sint()
@@ -354,6 +362,7 @@ def Pow2(a, l):
     return Pow2_from_bits(t)
 
 def Pow2_from_bits(bits):
+    comparison.program.reading('power of two', 'ABZS13')
     m = len(bits)
     t = list(bits)
     pow2k = [None for i in range(m)]
@@ -410,6 +419,7 @@ def Trunc(a, l, m, compute_modulo=False, signed=False):
         return TruncInRing(a, l, Pow2(m, l))
     else:
         kappa = program.Program.prog.security
+    prog.reading('secret truncation', 'ABZS13')
     r = [types.sint() for i in range(l)]
     r_dprime = types.sint(0)
     r_prime = types.sint(0)
@@ -450,6 +460,7 @@ def Trunc(a, l, m, compute_modulo=False, signed=False):
 
 @instructions_base.ret_cisc
 def TruncInRing(to_shift, l, pow2m):
+    comparison.program.reading('secret truncation', 'DEK20')
     n_shift = int(program.Program.prog.options.ring) - l
     bits = util.bit_decompose(to_shift, l)
     rev = types.sint.bit_compose(reversed(bits))
@@ -547,12 +558,13 @@ def TruncPrRing(a, k, m, signed=True):
     else:
         from .types import sint
         prog = program.Program.prog
-        if signed and prog.use_trunc_pr != -1:
+        if signed:
             a += (1 << (k - 1))
-        if program.Program.prog.use_trunc_pr:
+        if False:
             res = sint()
             trunc_pr(res, a, k, m)
         else:
+            prog.reading('probabilistic truncation', 'CdH10-fixed')
             # extra bit to mask overflow
             prog.curr_tape.require_bit_length(1)
             if prog.use_edabit() or prog.use_split() > 2:
@@ -572,7 +584,7 @@ def TruncPrRing(a, k, m, signed=True):
             overflow = msb.bit_xor(masked >> (n_ring - 1))
             res = shifted - upper + \
                   (overflow << (k - m))
-        if signed and prog.use_trunc_pr != -1:
+        if signed:
             res -= (1 << (k - m - 1))
         return res
 
@@ -581,6 +593,8 @@ def TruncPrField(a, k, m):
         return a
 
     program.Program.prog.trunc_pr_warning()
+    prog = program.Program.prog
+    prog.reading('probabilistic truncation', 'CdH10-fixed')
     b = two_power(k-1) + a
     r_prime, r_dprime = types.sint(), types.sint()
     comparison.PRandM(r_dprime, r_prime, [types.sint() for i in range(m)],
@@ -670,6 +684,7 @@ def BITLT(a, b, bit_length):
 def BitDecFull(a, n_bits=None, maybe_mixed=False):
     from .library import get_program, do_while, if_, break_point
     from .types import sint, regint, longint, cint
+    get_program().reading('full bit decomposition', 'NO07')
     p = get_program().prime
     assert p
     bit_length = p.bit_length()
@@ -717,6 +732,8 @@ def BitDecFull(a, n_bits=None, maybe_mixed=False):
                             tbits[j][i].link(sint.get_random_bit())
                     c = regint(BITLT(tbits[j], pbits, bit_length).reveal(False))
                     done[j].link(c)
+            from Compiler import library
+            library.runtime_error_if((sum(done) < 0) + (sum(done) > a.size))
             return (sum(done) != a.size)
         if maybe_mixed:
             b = sint(bs)
