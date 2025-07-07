@@ -229,6 +229,9 @@ Player::Player(const Names& Nms) :
 {
   nplayers=Nms.nplayers;
   player_no=Nms.player_no;
+  std::cerr << "NET_PLAYER_CONSTRUCT: Creating player at " << this 
+            << " with my_num=" << player_no 
+            << ", total players=" << nplayers << std::endl;
   thread_stats.resize(nplayers);
 }
 
