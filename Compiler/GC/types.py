@@ -499,7 +499,7 @@ class sbits(bits):
         res = cls()
         inst.inputb(player, n_bits, 0, res)
         return res
-    # compatiblity to sint
+    # compatibility to sint
     get_raw_input_from = get_input_from
     @classmethod
     def load_dynamic_mem(cls, address):
