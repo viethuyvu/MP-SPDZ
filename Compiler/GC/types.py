@@ -22,11 +22,13 @@ import itertools
 from functools import reduce
 
 class _binary:
+    def __or__(self, other):
+        return self ^ other ^ (self & other)
     def reveal_to(self, *args, **kwargs):
         raise CompilerError(
             '%s does not support revealing to indivual players' % type(self))
 
-class bits(Tape.Register, _structure, _bit):
+class bits(Tape.Register, _structure, _bit, _binary):
     n = 40
     unit = 64
     PreOp = staticmethod(floatingpoint.PreOpN)
@@ -631,6 +633,8 @@ class sbits(bits):
     def equal(self, other, n=None):
         bits = (~(self + other)).bit_decompose()
         return reduce(operator.mul, bits)
+    __eq__ = equal
+    __ne__ = lambda self, other: (self == other).bit_not()
     def right_shift(self, m, k, security=None, signed=True):
         return self.TruncPr(k, m)
     def TruncPr(self, k, m, kappa=None):
