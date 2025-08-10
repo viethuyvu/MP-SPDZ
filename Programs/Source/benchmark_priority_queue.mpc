@@ -1,3 +1,5 @@
+# secure priority queues (heaps) and oblivious sorting algorithms
+
 from Compiler import library as lib, oram, path_oram
 from Compiler.dijkstra import HeapQ
 from Compiler.path_oblivious_heap import (

@@ -1,3 +1,7 @@
+# secure logistic regression, a fundamental machine learning algorithm for binary classification, 
+# It trains a model on encrypted data to predict outcomes (e.g., "yes/no") 
+# without revealing the inputs or model weights during training.
+
 from Compiler import ml
 
 debug = False

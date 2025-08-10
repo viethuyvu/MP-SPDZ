@@ -1,3 +1,5 @@
+#benchmarking tool for secure neural network inference
+
 import ml
 import util
 import math

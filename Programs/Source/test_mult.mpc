@@ -1,0 +1,13 @@
+n = 13  # number of inputs per party, adjust as needed
+
+# Read arrays of inputs from players
+a_inputs = [sint.get_input_from(0) for _ in range(n)]
+b_inputs = [sint.get_input_from(1) for _ in range(n)]
+
+# Multiply elementwise
+products = [a * b for a, b in zip(a_inputs, b_inputs)]
+
+# Output results
+for i in range(n):
+    print_ln("a[%s] * b[%s] = %s", i, i, products[i].reveal())
+

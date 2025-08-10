@@ -1,4 +1,5 @@
 # Syntax is (longest vector, number of sops, name of layer)
+#benchmarking tool for secure convolutional neural networks (CNNs)
 
 v1_025_128 = [
     (27, 32768, 'CONV2D'),

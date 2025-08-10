@@ -1,3 +1,5 @@
+#Tests Basic program setup, argument handling, and matrix operations
+
 from Compiler.library import print_ln
 from Compiler.types import Matrix, sint
 from Compiler.compilerLib import Compiler

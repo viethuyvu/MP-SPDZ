@@ -1,3 +1,5 @@
+#classic alexNets comparisions
+
 from Compiler.ml import keras
 import Compiler.ml as tf
 

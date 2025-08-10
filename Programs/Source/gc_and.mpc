@@ -1,3 +1,5 @@
+#performance of bitwise AND operations in garbled circuits (GC),
+
 from Compiler.GC.types import sbits, sbit, cbits
 
 

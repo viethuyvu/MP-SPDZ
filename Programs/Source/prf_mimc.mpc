@@ -1,3 +1,5 @@
+#  pseudo-random functions that uses MiMC (Feistel) cipher, a lightweight PRF designed for MPC and zero-knowledge proofs
+
 from Compiler import instructions_base
 import sys
 

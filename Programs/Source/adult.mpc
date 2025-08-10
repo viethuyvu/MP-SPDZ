@@ -1,3 +1,5 @@
+#performs secure multi-party computation to train a decision tree classifier
+
 m = 6
 n_train = 32561
 n_test = 16281

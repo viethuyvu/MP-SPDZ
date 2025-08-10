@@ -1,3 +1,6 @@
+# Training script
+# Architecture: LeNet-5 with AveragePooling	Dataset: MNIST	Replaces MaxPooling with AveragePooling for MPC-friendly ops
+
 # this trains LeNet on MNIST with a dropout layer
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

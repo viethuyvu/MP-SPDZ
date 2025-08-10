@@ -1,3 +1,6 @@
+#benchmarking tool for secure inference of MobileNet models
+#lightweight convolutional neural networks (CNNs) designed for mobile and embedded vision applications
+
 import ml, sys
 
 if len(program.args) < 2:

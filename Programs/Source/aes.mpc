@@ -1,3 +1,5 @@
+#performs AES encryption without any single party seeing the secret key or plaintext
+
 from copy import copy
 
 program.curr_tape.require_bit_length(40, '2')

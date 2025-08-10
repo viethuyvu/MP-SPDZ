@@ -1,3 +1,5 @@
+# Secure NN focusing on quantization aspects.
+
 NetworkA = [
     (784, 128, 'FC'),
     (128, 128, 'FC'),

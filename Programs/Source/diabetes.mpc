@@ -1,3 +1,6 @@
+#secure linear regression on the Diabetes dataset using MPC. 
+# It trains a model to predict disease progression while keeping patient data encrypted throughout the computation.
+
 from sklearn import datasets, linear_model
 from sklearn.model_selection import train_test_split
 

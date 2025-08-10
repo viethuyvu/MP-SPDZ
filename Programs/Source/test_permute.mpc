@@ -1,3 +1,5 @@
+#Secure shuffling algorithms, parallel execution, permutation correctness
+
 from Compiler.library import get_number_of_players
 from Compiler.sqrt_oram import n_parallel
 from Compiler.util import if_else

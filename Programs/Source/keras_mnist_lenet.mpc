@@ -1,3 +1,6 @@
+# Training script
+# Architecture: LeNet-5 (Conv + Dense)	Dataset: MNIST	Adds Conv2D, MaxPooling, Dropout.
+
 # this trains LeNet on MNIST with a dropout layer
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

@@ -1,3 +1,5 @@
+#demonstrates Oblivious RAM
+
 from oram import OptimalORAM
 
 array = OptimalORAM(10000)

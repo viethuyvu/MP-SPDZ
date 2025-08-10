@@ -1,3 +1,5 @@
+#secure implementation of TensorFlow-like neural networks
+
 import ml
 import util
 import math

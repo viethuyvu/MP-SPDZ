@@ -1,3 +1,6 @@
+# secure two-party computation (2PC) between a server and a client, 
+# where the server performs a computation on private data sent by the client without revealing the inputs
+
 listen_for_clients(15000)
 socket = accept_client_connection(15000)
 

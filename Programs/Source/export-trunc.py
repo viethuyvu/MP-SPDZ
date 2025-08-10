@@ -1,3 +1,5 @@
+#Core MPC operations:  truncation (rounding) of secret integers.
+#Rounds a secret integer (sint) to a fixed-point representation with 32 bits, keeping 2 bits after the decimal point.
 @export
 def trunc_pr(x):
     print_ln('x=%s', x.reveal())

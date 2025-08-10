@@ -1,3 +1,6 @@
+#multi-threaded operations
+#Squaring element in array
+
 n = 1000000
 x = sint.Array(n)
 x.assign_vector(regint.inc(n))

@@ -1,3 +1,5 @@
+#benchmarking tool for secure decision tree training
+
 binary = 'binary' in program.args
 
 program.set_bit_length(32)

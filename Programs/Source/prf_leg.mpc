@@ -1,3 +1,5 @@
+# implement pseudo-random functions based on the Legendre symbol
+
 from Compiler import instructions_base
 import sys
 

@@ -1,3 +1,5 @@
+#Tests Matrix operations, dot products, performance, correctness of results
+
 a = Array.create_from([sint(1), sint(2), sint(3), sint(4)])
 b = Array.create_from([sint(3), sint(2), sint(1)])
 

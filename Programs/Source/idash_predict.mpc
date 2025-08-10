@@ -1,3 +1,5 @@
+#Trains a logistic regression model on encrypted data
+
 import ml
 import random
 import re

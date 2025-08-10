@@ -32,6 +32,10 @@
     
         - To run the online phase: ./Scripts/run-online htmac-2-8-10
 """
+
+#HtMAC (Hash-then-MAC), a secure message authentication code (MAC) construction 
+#provides data integrity and authenticity for encrypted messages while keeping all computations private.
+
 from Compiler.program import Program
 from Compiler import instructions_base
 from random import randint

@@ -1,3 +1,6 @@
+#AlexNet CNN architecture (5 convolutional layers + 3 fully connected layers) for image classification
+# with Debugging secure training, Experiments with input encodings  layer-specific normalization studies   
+
 from Compiler.ml import keras
 import Compiler.ml as tf
 

@@ -1,3 +1,6 @@
+# Predictiing script
+# Predicts using a pre-trained LeNet on MNIST.
+
 # this trains LeNet on MNIST with a dropout layer
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

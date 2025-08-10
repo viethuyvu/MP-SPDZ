@@ -1,3 +1,5 @@
+#Tests Circuit ORAM, a type of oblivious RAM (ORAM), which hides memory access patterns in secure computations.
+
 prog = program
 
 prog.options.binary = -1

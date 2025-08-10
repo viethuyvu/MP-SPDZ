@@ -1,3 +1,6 @@
+#Training
+# Architecture: LeNet-5	Dataset: CIFAR-10	Adapts LeNet for RGB images (32x32x3).
+
 # this trains LeNet on MNIST with a dropout layer
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

@@ -1,3 +1,5 @@
+#bulk AES-128 encryption using a precompiled circuit
+
 from circuit import Circuit
 sb128 = sbits.get_type(128)
 key = sb128(0x2b7e151628aed2a6abf7158809cf4f3c)

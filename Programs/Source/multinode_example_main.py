@@ -1,3 +1,7 @@
+# distribute secure computations across multiple nodes in the MP-SPDZ framework, 
+# enabling parallel processing of MPC operations.
+# Coordinator: init, task distribution and result aggeration
+
 import random
 
 n_nodes_per_party = int(program.args[1])

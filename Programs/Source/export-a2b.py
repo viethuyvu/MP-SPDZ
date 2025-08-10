@@ -1,3 +1,6 @@
+#Core MPC operations: arithmetic-to-boolean (A2B) conversion.
+#Converts an array of secret integers (sint) to an array of secret bits (sbitvec).
+
 @export
 def a2b(x, res):
     print_ln('x=%s', x.reveal())

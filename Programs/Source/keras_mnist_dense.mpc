@@ -1,3 +1,5 @@
+# Training script
+# Architecture: 2-layer DNN (128, 128)	Dataset: MNIST	Basic dense network with ReLU/softmax.
 # this trains a dense neural network on MNIST
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

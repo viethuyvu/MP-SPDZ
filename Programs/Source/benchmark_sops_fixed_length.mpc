@@ -1,3 +1,6 @@
+# benchmark for secure fixed-length dot product operations in MP-SPDZ, focusing on quantized arithmetic 
+# (a technique used in secure machine learning and other MPC applications). 
+# fixing the vector length and varying the number of operations
 # c5.9xlarge has 36 cores
 n_threads = 36
 

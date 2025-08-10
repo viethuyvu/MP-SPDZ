@@ -1,3 +1,4 @@
+#Garbled circuit operations, bit manipulation, memory handling
 
 def test(actual, expected):
     actual = actual.reveal()

@@ -1,3 +1,4 @@
+#secure dot product operations, fixes the number of operations (n = 100,000) and varies the vector length
 # c5.9xlarge has 36 cores
 n_threads = 36
 

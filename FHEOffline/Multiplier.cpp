@@ -36,20 +36,33 @@ template <class FD>
 void Multiplier<FD>::multiply_and_add(Plaintext_<FD>& res,
         const Ciphertext& enc_a, const Plaintext_<FD>& b)
 {
+    // cout << "===== FHE MULTIPLY-AND-ADD START =====" << endl;
+    // cout << "Multiplier (offset " << get_offset() << "):" << endl;
+    // cout << " - Input ciphertext level: " << enc_a.level() << endl;
+    // cout << " - Input plaintext slots: " << b.num_slots() << endl;
     Rq_Element bb(enc_a.get_params(), evaluation, evaluation);
     bb.from(b.get_iterator());
+
+    // cout << " - Converted plaintext to Rq_Element" << endl;
     multiply_and_add(res, enc_a, bb);
+    // cout << "===== FHE MULTIPLY-AND-ADD COMPLETE =====" << endl;
 }
 
 template <class FD>
 void Multiplier<FD>::multiply_and_add(Plaintext_<FD>& res,
         const Ciphertext& enc_a, const Rq_Element& b, OT_ROLE role)
 {
+    // cout << "Multiplier (offset " << get_offset() << "):" << endl;
+    // cout << " - Role: " << (role & SENDER ? "SENDER" : "RECEIVER") << endl;
     if (role & SENDER)
     {
+        // cout << " - Performing homomorphic multiplication" << endl;
+        //double noise_before = enc_a.noise();
         timers["Ciphertext multiplication"].start();
         C.mul(enc_a, b);
         timers["Ciphertext multiplication"].stop();
+        //double noise_after = C.noise();
+        //cout << " - Noise growth: " << noise_before << " -> " << noise_after << " bits (Δ=" << noise_after - noise_before << ")" << endl;
     }
 
     add(res, C, role);

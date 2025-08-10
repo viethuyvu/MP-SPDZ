@@ -1,3 +1,5 @@
+#secure Vickrey auction, a privacy-preserving auction mechanism where the highest bidder wins but pays the second-highest bid
+
 import util
 from Compiler import types
 

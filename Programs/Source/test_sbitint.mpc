@@ -1,3 +1,5 @@
+#Secret integer operations, arithmetic, comparisons, conditional execution
+
 program.options.merge_opens = False
 
 from Compiler.GC.types import *

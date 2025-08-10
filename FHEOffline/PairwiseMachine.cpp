@@ -64,8 +64,14 @@ template <class FD>
 void RealPairwiseMachine::setup_keys()
 {
     auto& N = P;
+    // cout << "===== FHE KEY SETUP START =====" << endl;
+    // cout << "Player " << P.my_num() << ": Initializing FHE parameters" << endl;
     PairwiseSetup<FD>& s = setup<FD>();
     s.init(P, sec, field_size, extra_slack);
+    // cout << " - Security: " << sec << endl;
+    // cout << " - Field size: " << field_size << endl;
+    // cout << " - Extra slack: " << extra_slack << endl;
+
     if (output)
         write_mac_key(get_prep_dir<FD>(P), P.my_num(), P.num_players(), s.alphai);
     for (auto& x : other_pks)
@@ -73,16 +79,23 @@ void RealPairwiseMachine::setup_keys()
     sk = FHE_SK(pk);
     PRNG G;
     G.ReSeed();
+
     insecure("local key generation");
     KeyGen(pk, sk, G);
+    // cout << "Player " << P.my_num() << ": Generated local keys" << endl;
+    // cout << " - Public key size: " << pk.size() << " bytes" << endl;
+
     vector<octetStream> os(N.num_players());
     pk.pack(os[N.my_num()]);
     P.Broadcast_Receive(os);
     for (int i = 0; i < N.num_players(); i++)
         if (i != N.my_num())
             other_pks[i].unpack(os[i]);
+
     set_mac_key(s.alphai);
     Share<typename FD::T>::MAC_Check::setup(P);
+    // cout << "Player " << P.my_num() << ": Received public keys from other players" << endl;
+    // cout << "===== FHE KEY SETUP COMPLETE =====" << endl;
 }
 
 template <class T>
@@ -90,12 +103,17 @@ void RealPairwiseMachine::set_mac_key(T alphai)
 {
     typedef typename T::FD FD;
     auto& N = P;
+    // cout << "===== MAC KEY SETUP START =====" << endl;
+    // cout << "Player " << P.my_num() << ": Setting MAC key" << endl;
     PairwiseSetup<FD>& s = setup<FD>();
     s.alphai = alphai;
+    // cout << " - MAC key: " << s.alphai << endl;
+
     for (size_t i = 0; i < s.alpha.num_slots(); i++)
         s.alpha.set_element(i, alphai);
     insecure("MAC key generation");
     Ciphertext enc_alpha = pk.encrypt(s.alpha);
+    // cout << " - Encrypted MAC key (size: " << enc_alpha.size() << " bytes)" << endl;
     vector<octetStream> os;
     os.clear();
     os.resize(N.num_players());
@@ -105,10 +123,12 @@ void RealPairwiseMachine::set_mac_key(T alphai)
     for (int i = 0; i < N.num_players(); i++)
         if (i != N.my_num())
             enc_alphas[i].unpack(os[i]);
-    for (int i = 0; i < N.num_players(); i++)
-        cout << "Player " << i << " has pk "
-                << other_pks[i].a().get(0).get_constant().get_limb(0) << " ..."
-                << endl;
+    // for (int i = 0; i < N.num_players(); i++)
+    //     cout << "Player " << i << " has pk "
+    //             << other_pks[i].a().get(0).get_constant().get_limb(0) << " ..."
+    //             << endl;
+
+    // cout << "===== MAC KEY SETUP COMPLETE =====" << endl;
 }
 
 void PairwiseMachine::pack(octetStream& os) const

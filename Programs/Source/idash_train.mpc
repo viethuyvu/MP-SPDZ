@@ -1,3 +1,5 @@
+#Makes predictions using a pre-trained logistic regression model on encrypted data.
+
 import ml
 import random
 import re

@@ -1,3 +1,5 @@
+#	Predicts using a pre-trained DNN on MNIST.
+
 # this trains a dense neural network on MNIST
 # see https://github.com/csiro-mlai/mnist-mpc for data preparation
 

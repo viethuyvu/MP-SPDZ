@@ -1,3 +1,5 @@
+#Oblivious heap data structure, priority queue operations, graph algorithms
+
 from Compiler import library as lib, path_oblivious_heap as poh, util
 from Compiler.path_oram import OptimalORAM, RecursivePathORAM
 from Compiler import dijkstra

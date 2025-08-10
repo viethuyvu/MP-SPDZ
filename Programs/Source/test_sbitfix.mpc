@@ -1,4 +1,6 @@
-import math
+#Fixed-point arithmetic, secret bit operations, comparison operations
+
+mport math
 
 sbitfix.set_precision(16, 32)
 

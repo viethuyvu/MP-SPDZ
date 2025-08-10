@@ -1,3 +1,6 @@
+#secure linkage analysis algorithm, likely for genome-wide association studies (GWAS) or privacy-preserving record linkage (PPRL). 
+#It compares encrypted datasets to find matches while keeping the underlying data confidential.
+
 import math
 import util
 

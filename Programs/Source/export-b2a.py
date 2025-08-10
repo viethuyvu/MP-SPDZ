@@ -1,3 +1,5 @@
+#Core MPC operations: boolean-to-arithmetic (B2A) conversion.
+#Converts an array of secret bits (sbitvec) back to an array of secret integers (sint).
 @export
 def b2a(res, x):
     print_ln('x=%s', x.reveal())

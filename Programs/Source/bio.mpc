@@ -1,3 +1,7 @@
+#secure biometric matching system using Multi-Party Computation (MPC). 
+#It compares a secret biometric sample (e.g., fingerprint, facial recognition data) 
+#against a database of encrypted records to find the closest match without revealing any private data.
+
 program.use_edabit(True)
 program.set_bit_length(32)
 
