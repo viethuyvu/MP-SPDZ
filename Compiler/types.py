@@ -4383,7 +4383,7 @@ class cfix(_number, _structure):
     @vectorize
     def print_plain(self):
         """ Clear fixed-point output. """
-        nan = abs(self.v) >> (self.k - 1)
+        nan = (self.v < 0).if_else(-self.v - 1, self.v) >> (self.k - 1)
         print_float_plain(cint.conv(self.v), cint(-self.f), \
                           cint(0), cint(0), nan)
 
