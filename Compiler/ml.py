@@ -300,7 +300,13 @@ class NoVariableLayer(Layer):
     nablas = lambda self: ()
     reset = lambda self: None
 
-class Output(NoVariableLayer):
+class OutputBase(NoVariableLayer):
+    sample_mask = None
+
+    def set_sample_mask(self, sample_mask):
+        self.sample_mask = sample_mask and Array.create_from(sample_mask)
+
+class Output(OutputBase):
     """ Fixed-point logistic regression output layer.
 
     :param N: number of examples
@@ -326,7 +332,6 @@ class Output(NoVariableLayer):
         self.approx = approx
         self.compute_loss = True
         self.d_out = 1
-        self.set_sample_mask(None)
 
     @staticmethod
     def divisor(divisor, size=1):
@@ -391,9 +396,6 @@ class Output(NoVariableLayer):
         self.weights.assign(weights)
         self.weight_total = sum(weights)
 
-    def set_sample_mask(self, sample_mask):
-        self.sample_mask = sample_mask and Array.create_from(sample_mask)
-
     def average_loss(self, N):
         return self.l.reveal()
 
@@ -421,7 +423,7 @@ class Output(NoVariableLayer):
 	                    i, truth, guess, b, nabla)
         return n_correct
 
-class LinearOutput(NoVariableLayer):
+class LinearOutput(OutputBase):
     n_outputs = -1
 
     def __init__(self, N, n_targets=1):
@@ -441,9 +443,14 @@ class LinearOutput(NoVariableLayer):
         guess = self.X.get_vector(0, N)
         truth = self.Y.get(batch.get_vector(0, N))
         diff = guess - truth
+        if self.sample_mask:
+            sample_mask = self.sample_mask.get(batch.get_vector(0, N))
+            diff = diff * sample_mask
+            self.l.write(sum((diff) ** 2) / sum(sample_mask))
+        else:
+            self.l.write(sum((diff) ** 2) * Output.divisor(N))
         self.nabla_X.assign_vector(diff)
         #print_ln('%s %s %s', diff.reveal(), truth.reveal(), guess.reveal())
-        self.l.write(sum((diff) ** 2) * Output.divisor(N))
 
     def backward(self, batch):
         pass
