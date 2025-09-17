@@ -1091,7 +1091,8 @@ class sbitvec(_vec, _bit, _binary):
         other = self.conv(other)
         assert len(self.v) == len(other.v)
         for x, y in zip(self.v, other.v):
-            x.update(y)
+            if x is not y:
+                x.update(y)
 
 class bit(object):
     n = 1
