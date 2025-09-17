@@ -2297,9 +2297,11 @@ class _secret(_arithmetic_register, _secret_structure):
         """ Compose value from bits.
 
         :param bits: iterable of any type convertible to sint """
-        from Compiler.GC.types import sbits, sbitintvec
+        from Compiler.GC.types import sbits, sbitintvec, sbitvec
         if isinstance(bits, sbits):
             bits = bits.bit_decompose()
+        elif isinstance(bits, sbitvec):
+            bits = bits.v
         bits = list(bits)
         if (program.use_edabit() or program.use_split()) and isinstance(bits[0], sbits):
             if program.use_edabit():

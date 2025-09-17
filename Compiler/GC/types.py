@@ -792,6 +792,8 @@ class sbitvec(_vec, _bit, _binary):
             @classmethod
             def from_vec(cls, vector):
                 res = cls()
+                if isinstance(vector, sbitvec):
+                    vector = vector.v
                 res.v = _complement_two_extend(list(vector), n)[:n]
                 return res
             def __init__(self, other=None, size=None):
@@ -867,6 +869,8 @@ class sbitvec(_vec, _bit, _binary):
         return sbitvecn
     @classmethod
     def from_vec(cls, vector):
+        if isinstance(vector, sbitvec):
+            vector = vector.v
         res = cls()
         res.v = list(vector)
         return res
@@ -954,7 +958,7 @@ class sbitvec(_vec, _bit, _binary):
     def if_else(self, x, y):
         return util.if_else(self.v[0], x, y)
     def __iter__(self):
-        return iter(self.v)
+        return iter(self.elements())
     def __len__(self):
         return len(self.v)
     def __getitem__(self, index):
@@ -1423,7 +1427,7 @@ class sbitintvec(sbitvec, _bitint, _number, _sbitintbase):
                 def instruction(*args):
                     res = self.binary_mul(args[bl:2 * bl], args[2 * bl:],
                                           args[0].n)
-                    for x, y in zip(res, args):
+                    for x, y in zip(sbitvec.from_vec(res).v, args):
                         x.mov(y, x)
                 instruction.__name__ = 'binary_mul%sx%s' % (bl, len(other_bits))
                 self.mul_functions[key] = instructions_base.cisc(instruction,
