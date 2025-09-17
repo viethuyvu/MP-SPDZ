@@ -1593,6 +1593,7 @@ class sbitfixvec(_fix, _vec, _binary):
     int_type = sbitintvec.get_type(sbitfix.k)
     float_type = type(None)
     clear_type = cbitfix
+    rep_type = staticmethod(lambda x: x)
     @property
     def bit_type(self):
         return type(self.v[0])

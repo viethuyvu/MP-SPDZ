@@ -4131,9 +4131,9 @@ class cfix(_number, _structure):
         return res
 
     @staticmethod
-    def int_rep(v, f, k=None):
+    def int_rep(v, f, k=None, rep_type=cint):
         if isinstance(v, regint):
-            v = cint(v)
+            v = rep_type(v)
         res = v * (2 ** f)
         try:
             res = int(round(res))
@@ -4758,7 +4758,8 @@ class _fix(_single):
         elif isinstance(_v, self.int_type):
             self.load_int(_v)
         elif isinstance(_v, cfix.scalars):
-            self.v = self.int_type(cfix.int_rep(_v, f=f, k=k), size=size)
+            self.v = self.int_type(
+                cfix.int_rep(_v, f=f, k=k, rep_type=self.rep_type), size=size)
         elif isinstance(_v, self.float_type):
             p = (f + _v.p)
             b = (p.greater_equal(0, _v.vlen))
@@ -4982,6 +4983,7 @@ class sfix(_fix):
     clear_type = cfix
     get_type = staticmethod(lambda n: sint)
     default_type = sint
+    rep_type = cint
 
     @classmethod
     def get_prec_type(cls, f, k=None):
