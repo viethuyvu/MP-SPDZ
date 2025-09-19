@@ -2297,9 +2297,11 @@ class _secret(_arithmetic_register, _secret_structure):
         """ Compose value from bits.
 
         :param bits: iterable of any type convertible to sint """
-        from Compiler.GC.types import sbits, sbitintvec
+        from Compiler.GC.types import sbits, sbitintvec, sbitvec
         if isinstance(bits, sbits):
             bits = bits.bit_decompose()
+        elif isinstance(bits, sbitvec):
+            bits = bits.v
         bits = list(bits)
         if (program.use_edabit() or program.use_split()) and isinstance(bits[0], sbits):
             if program.use_edabit():
@@ -4129,9 +4131,9 @@ class cfix(_number, _structure):
         return res
 
     @staticmethod
-    def int_rep(v, f, k=None):
+    def int_rep(v, f, k=None, rep_type=cint):
         if isinstance(v, regint):
-            v = cint(v)
+            v = rep_type(v)
         res = v * (2 ** f)
         try:
             res = int(round(res))
@@ -4383,7 +4385,7 @@ class cfix(_number, _structure):
     @vectorize
     def print_plain(self):
         """ Clear fixed-point output. """
-        nan = abs(self.v) >> (self.k - 1)
+        nan = (self.v < 0).if_else(-self.v - 1, self.v) >> (self.k - 1)
         print_float_plain(cint.conv(self.v), cint(-self.f), \
                           cint(0), cint(0), nan)
 
@@ -4756,7 +4758,8 @@ class _fix(_single):
         elif isinstance(_v, self.int_type):
             self.load_int(_v)
         elif isinstance(_v, cfix.scalars):
-            self.v = self.int_type(cfix.int_rep(_v, f=f, k=k), size=size)
+            self.v = self.int_type(
+                cfix.int_rep(_v, f=f, k=k, rep_type=self.rep_type), size=size)
         elif isinstance(_v, self.float_type):
             p = (f + _v.p)
             b = (p.greater_equal(0, _v.vlen))
@@ -4980,6 +4983,7 @@ class sfix(_fix):
     clear_type = cfix
     get_type = staticmethod(lambda n: sint)
     default_type = sint
+    rep_type = cint
 
     @classmethod
     def get_prec_type(cls, f, k=None):
@@ -6632,7 +6636,8 @@ class SubMultiArray(_vectorizable):
         if isinstance(index, int) and index < 0:
             index += self.sizes[0]
         key = program.curr_tape, tuple(
-            (x, x.has_else) for x in program.curr_tape.if_states), str(index)
+            (x, None if isinstance(x, bool) else x.has_else)
+            for x in program.curr_tape.if_states), str(index)
         if key not in self.sub_cache:
             index = self.check(index, self.sizes[0], self.sizes)
             if len(self.sizes) == 2:
