@@ -80,7 +80,7 @@ CONFIG.mine:
 	touch CONFIG.mine
 
 %.o: %.cpp
-	$(CXX) -o $@ $< $(CFLAGS) -MMD -MP -c
+	$(CXX) -o $@ $< $(CXXFLAGS) -MMD -MP -c
 
 online: Fake-Offline.x Server.x Player-Online.x Check-Offline.x emulate.x mascot-party.x
 
@@ -142,25 +142,25 @@ ecdsa-static: static-dir $(patsubst ECDSA/%.cpp,static/%.x,$(wildcard ECDSA/*-ec
 $(LIBRELEASE): Protocols/MalRepRingOptions.o $(PROCESSOR) $(COMMONOBJS) $(TINIER) $(GC)
 	$(AR) -csr $@ $^
 
-CFLAGS += -fPIC
+CXXFLAGS += -fPIC
 LDLIBS += -Wl,-rpath -Wl,$(CURDIR)
 
 $(SHAREDLIB): $(PROCESSOR) $(COMMONOBJS) GC/square64.o GC/Instruction.o
-	$(CXX) $(CFLAGS) -shared -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ $(LDLIBS)
 
 $(FHEOFFLINE): $(FHEOBJS) $(SHAREDLIB)
-	$(CXX) $(CFLAGS) -shared -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -shared -o $@ $^ $(LDLIBS)
 
 static/%.x: Machines/%.o $(LIBRELEASE) $(LIBSIMPLEOT) local/lib/libcryptoTools.a local/lib/liblibOTe.a
 	$(MAKE) static-dir
-	$(CXX) -o $@ $(CFLAGS) $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(LIBRELEASE) -llibOTe -lcryptoTools $(LIBSIMPLEOT) $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
+	$(CXX) -o $@ $(CXXFLAGS) $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(LIBRELEASE) -llibOTe -lcryptoTools $(LIBSIMPLEOT) $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
 
 static/%.x: Machines/BMR/%.o $(LIBRELEASE) $(LIBSIMPLEOT) local/lib/libcryptoTools.a local/lib/liblibOTe.a
 	$(MAKE) static-dir
-	$(CXX) -o $@ $(CFLAGS) $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(LIBRELEASE) -llibOTe -lcryptoTools $(LIBSIMPLEOT) $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
+	$(CXX) -o $@ $(CXXFLAGS) $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(LIBRELEASE) -llibOTe -lcryptoTools $(LIBSIMPLEOT) $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
 
 static/%.x: ECDSA/%.o ECDSA/P256Element.o $(VMOBJS) $(OT) $(LIBSIMPLEOT)
-	$(CXX) $(CFLAGS) -o $@ $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
+	$(CXX) $(CXXFLAGS) -o $@ $^ -Wl,-Map=$<.map -Wl,-Bstatic -static-libgcc -static-libstdc++ $(BOOST) $(LDLIBS) -lz -Wl,-Bdynamic -ldl
 
 static-dir:
 	@ mkdir static 2> /dev/null; true
@@ -179,26 +179,26 @@ export-b2a.x: Machines/export-ring.o
 export: $(patsubst Utils/%.cpp, %.x, $(wildcard Utils/export*.cpp))
 
 Fake-ECDSA.x: ECDSA/Fake-ECDSA.cpp ECDSA/P256Element.o $(COMMON) Processor/PrepBase.o
-	$(CXX) -o $@ $^ $(CFLAGS) $(LDLIBS)
+	$(CXX) -o $@ $^ $(CXXFLAGS) $(LDLIBS)
 
 ot.x: $(OT) $(COMMON) Machines/OText_main.o Machines/OTMachine.o $(LIBSIMPLEOT)
-	$(CXX) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 ot-offline.x: $(OT) $(LIBSIMPLEOT) Machines/TripleMachine.o
 
 gc-emulate.x: $(VM) GC/FakeSecret.o GC/square64.o
 
 bmr-%.x: $(BMR) $(VM) Machines/BMR/bmr-%.cpp $(LIBSIMPLEOT)
-	$(CXX) -o $@ $(CFLAGS) $^ $(BOOST) $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(BOOST) $(LDLIBS)
 
 %-bmr-party.x: Machines/BMR/%-bmr-party.o $(BMR) $(SHAREDLIB) $(MINI_OT)
-	$(CXX) -o $@ $(CFLAGS) $^ $(BOOST) $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(BOOST) $(LDLIBS)
 
 bmr-clean:
 	-rm BMR/*.o BMR/*/*.o GC/*.o
 
 bankers-bonus-client.x: ExternalIO/bankers-bonus-client.o $(COMMON)
-	$(CXX) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 simple-offline.x: $(FHEOFFLINE)
 pairwise-offline.x: $(FHEOFFLINE)
@@ -212,25 +212,25 @@ yao-clean:
 	-rm Yao/*.o
 
 galois-degree.x: Utils/galois-degree.o
-	$(CXX) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 default-prime-length.x: Utils/default-prime-length.o
-	$(CXX) $(CFLAGS) -o $@ $^ $(LDLIBS)
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDLIBS)
 
 secure.x: Utils/secure.o
-	$(CXX) -o $@ $(CFLAGS) $^
+	$(CXX) -o $@ $(CXXFLAGS) $^
 
 Fake-Offline.x: Utils/Fake-Offline.o $(VM)
-	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(LDLIBS)
 
 %.x: Utils/%.o $(COMMON)
-	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(LDLIBS)
 
 %.x: Machines/%.o $(MINI_OT) $(SHAREDLIB)
-	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS) $(SHAREDLIB)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(LDLIBS) $(SHAREDLIB)
 
 %-ecdsa-party.x: ECDSA/%-ecdsa-party.o ECDSA/P256Element.o $(VM)
-	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(LDLIBS)
 
 replicated-bin-party.x: GC/square64.o
 replicated-ring-party.x: GC/square64.o
@@ -270,9 +270,9 @@ sy-rep-ring-party.x: Protocols/MalRepRingOptions.o
 rep4-ring-party.x: GC/Rep4Secret.o GC/Rep4Prep.o
 no-party.x: Protocols/ShareInterface.o
 PPMLAC-party.x: PPMLAC_party.o Protocols/ShareInterface.o $(MINI_OT) $(SHAREDLIB)
-	$(CXX) -o $@ $(CFLAGS) $^ $(LDLIBS)
+	$(CXX) -o $@ $(CXXFLAGS) $^ $(LDLIBS)
 PPMLAC_party.o: Machines/PPMLAC_party.cpp Protocols/PPMLAC_share.h Protocols/PPMLAC_protocol.h Protocols/PPMLAC_prep.h
-	$(CXX) $(CFLAGS) -c -o $@ $<
+	$(CXX) $(CXXFLAGS) -c -o $@ $<
 semi-ecdsa-party.x: $(OT) $(LIBSIMPLEOT) $(GC_SEMI)
 mascot-ecdsa-party.x: $(OT) $(LIBSIMPLEOT)
 rep4-ecdsa-party.x: GC/Rep4Prep.o

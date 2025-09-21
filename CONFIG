@@ -27,6 +27,7 @@ USE_GF2N_LONG = 1
 # BMI2 is used to optimize multiplication modulo a prime
 # ADX is used to optimize big integer additions
 # delete the second line to compile for a platform that supports everything
+
 ARCH = -mtune=native -msse4.1 -msse4.2 -maes -mpclmul -mavx -mavx2 -mbmi2 -madx
 ARCH = -march=native
 
@@ -66,7 +67,7 @@ endif
 USE_KOS = 0
 
 # allow to set compiler in CONFIG.mine
-CXX = g++
+CXX = clang++
 
 # use CONFIG.mine to overwrite DIR settings
 -include CONFIG.mine
@@ -79,6 +80,7 @@ endif
 
 ifeq ($(AVX_SIMPLEOT), 0)
 CFLAGS += -DNO_AVX_OT
+CXXFLAGS += -DNO_AVX_OT
 endif
 
 # MAX_MOD_SZ (for FHE) must be least and GFP_MOD_SZ (for computation)
@@ -94,9 +96,11 @@ LDLIBS += -lssl -lcrypto
 LDLIBS += -lboost_filesystem -lboost_iostreams
 
 CFLAGS += -I./local/include
+CXXFLAGS += -I./local/include
 
 ifeq ($(USE_NTL),1)
 CFLAGS += -DUSE_NTL
+CXXFLAGS += -DUSE_NTL
 LDLIBS := -lntl $(LDLIBS)
 endif
 
@@ -107,21 +111,22 @@ endif
 
 BOOST = -lboost_thread $(MY_BOOST)
 
-CFLAGS += $(ARCH) $(MY_CFLAGS) $(GDEBUG) -Wextra -Wall $(OPTIM) -I$(ROOT) -I$(ROOT)/deps -pthread $(PROF) $(DEBUG) $(MOD) $(GF2N_LONG) $(PREP_DIR) $(SSL_DIR) $(SECURE) -std=c++17 -Werror
-CFLAGS += $(BREW_CFLAGS)
-CPPFLAGS = $(CFLAGS)
+BASE_FLAGS = $(ARCH) $(MY_CFLAGS) $(GDEBUG) -Wextra -Wall $(OPTIM) -I$(ROOT) -I$(ROOT)/deps -pthread $(PROF) $(DEBUG) $(MOD) $(GF2N_LONG) $(PREP_DIR) $(SSL_DIR) $(SECURE)
+CFLAGS += $(BASE_FLAGS) $(BREW_CFLAGS)
+CXXFLAGS += $(BASE_FLAGS) $(BREW_CFLAGS) -std=c++17 -Werror
+CPPFLAGS = $(CXXFLAGS)
 LD = $(CXX)
 
 ifeq ($(OS), Darwin)
 # for boost with OpenSSL 3
-CFLAGS += -Wno-error=deprecated-declarations
+CXXFLAGS += -Wno-error=deprecated-declarations
 ifeq ($(USE_NTL),1)
-CFLAGS += -Wno-error=unused-parameter -Wno-error=deprecated-copy
+CXXFLAGS += -Wno-error=unused-parameter -Wno-error=deprecated-copy
 endif
 endif
 
 ifeq ($(USE_KOS),1)
-CFLAGS += -DUSE_KOS
+CXXFLAGS += -DUSE_KOS
 else
-CFLAGS += -std=c++17
+CXXFLAGS += -std=c++17
 endif
