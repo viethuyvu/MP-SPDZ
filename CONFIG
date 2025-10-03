@@ -113,7 +113,7 @@ BOOST = -lboost_thread $(MY_BOOST)
 
 BASE_FLAGS = $(ARCH) $(MY_CFLAGS) $(GDEBUG) -Wextra -Wall $(OPTIM) -I$(ROOT) -I$(ROOT)/deps -pthread $(PROF) $(DEBUG) $(MOD) $(GF2N_LONG) $(PREP_DIR) $(SSL_DIR) $(SECURE)
 CFLAGS += $(BASE_FLAGS) $(BREW_CFLAGS)
-CXXFLAGS += $(BASE_FLAGS) $(BREW_CFLAGS) -std=c++17 -Werror
+CXXFLAGS += $(BASE_FLAGS) $(BREW_CFLAGS) -std=c++17
 CPPFLAGS = $(CXXFLAGS)
 LD = $(CXX)
 
